@@ -1,9 +1,9 @@
 package br.com.quarkus;
 
-import br.com.quarkus.rest.resource.dto.UserResponseDTO;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import br.com.quarkus.rest.resource.dto.UserResponseDTO;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
@@ -22,32 +22,39 @@ public class UserResourceTest {
                 .body()
                 .as(UserResponseDTO[].class);
     }
+
     @Test
     public void testGetOneUsersEndpoint() {
         given()
-                .when().get("/api/user/1")
+                .when().get("/api/user/3")
                 .then()
                 .statusCode(200)
                 .extract()
                 .response()
                 .body()
-                .as(UserResponseDTO[].class);
+                .as(UserResponseDTO.class);
     }
+
     @Test
     public void testPostUsersEndpoint() {
         given()
-                .when().post("/api/user")
+                .body("{\"email\": \"Bruce\", \"name\": \"Banner\", \"password\": \"123\"}")
+                .header("Content-Type", "application/json")
+                .when()
+                .post("/api/user/")
                 .then()
-                .statusCode(200)
-                .body(is("Hello from RESTEasy Reactive"));
+                .statusCode(200);
     }
+
     @Test
     public void testDeleteUsersEndpoint() {
         given()
-                .when().delete("/api/user/1")
+                .when().delete("/api/user/5")
                 .then()
-                .statusCode(200)
-                .body(is("Hello from RESTEasy Reactive"));
+                .statusCode(204)
+                .extract()
+                .response()
+                .body();
     }
 
 }
